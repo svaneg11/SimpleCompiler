@@ -1,12 +1,12 @@
 from .Caracter import *
+import copy
 
-
-"""
-Un objeto escaner lee un texto fuente 
-y retorna un caracter a la vez.
-"""
 class Escaner:
 
+    """
+    Un objeto escaner lee un texto fuente
+    y retorna un caracter a la vez.
+    """
 
     def __init__(self, textoAEscanear):
         self.textoFuente = textoAEscanear
@@ -30,9 +30,14 @@ class Escaner:
 
         if self.indiceTexto > self.indiceFinal:
             car = Caracter(FINDEARCHIVO, self.indiceLinea, self.indiceCol, self.indiceTexto, self.textoFuente)
+            car2 = copy.copy(car)
         else:
             c = self.textoFuente[self.indiceTexto]
             car = Caracter(c, self.indiceLinea, self.indiceCol, self.indiceTexto, self.textoFuente)
-        return car
-
-    def back():
+            car2 = copy.copy(car)
+            if self.indiceTexto+1 < self.indiceFinal:
+                nextCar = self.textoFuente[self.indiceTexto+1]
+                car2.caracter += nextCar
+            else:
+                car2 = copy.copy(car)
+        return car, car2

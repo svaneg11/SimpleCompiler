@@ -1,11 +1,11 @@
 from source import Escaner
 
 
-# class LexerError(Exception):
-#     print('Fin de archivo encontrado inesperadamente')
-#
-# class LexerStangeCharacterFound(Exception):
-#     print('Encontré algo que no reconozco')
+class LexerError(Exception):
+    print('Fin de archivo encontrado inesperadamente')
+
+class LexerStangeCharacterFound(Exception):
+    print('Encontré algo que no reconozco')
 
 # ----------------------------------------------------------
 #       Token

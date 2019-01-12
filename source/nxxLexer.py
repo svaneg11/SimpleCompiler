@@ -1,129 +1,120 @@
-from source import Escaner as scanner
+from .Escaner import Escaner
 from .Token import *
 from .SimbolosNxx import *
 from .Caracter import *
 import copy
 
-c1, c2 = 0,0
+
+class Lexer:
+
+    def __init__(self, textoFuente):
+        self.scanner = Escaner.Escaner(textoFuente)
+        self.c1, self.c2 = self.scanner.get()
+
+    def getChar(self):
+        self.c1, self.c2 = self.scanner.get()
+
+    def get(self):
+        """
+        Construye y retorna el siguiente token en el texto fuente
+        """
+
+        # --------------------------------------------------------------------------------
+        # Lee del texto fuente e ignora los espacios blancos y comentarios -- START
+        # --------------------------------------------------------------------------------
+        while self.c1.caracter in ESPACIOS_EN_BLANCO_CARACTERES or self.c2.caracter == '/*':
+            # procesar espacio en blanco
+            while self.c1.caracter in ESPACIOS_EN_BLANCO_CARACTERES:
+                token = Token(self.c1)
+                token.tipo = ESPACIO_EN_BLANCO
+                self.getChar()
+
+                while self.c1.caracter in ESPACIOS_EN_BLANCO_CARACTERES:
+                    token.caracter += self.c1.caracter
+                    self.getChar()
+
+                # retornar token solo si queremos procesar espacios en blanco
+
+            # procesar comentarios
+
+            while self.c2.caracter == '/*':
+                # Encontramos el inicio de un comentario
+                token = Token(self.c2)
+                token.tipo = COMENTARIO
+                token.caracter = self.c2.caracter
+                self.getChar()
+
+                while not(self.c2.caracter == '*/'):
+                    if self.c1.caracter == FIN_DE_ARCHIVO:
+                        pass
+                    token.caracter += self.c1. caracter
+                    self.getChar()
+                token.caracter += self.c1.caracter
+            # retornar token solo si se quieren procesar los comentarios
+
+        # --------------------------------------------------------------------------------
+        # Lee del texto fuente e ignora los espacios blancos y comentarios -- FIN
+        # --------------------------------------------------------------------------------
+
+        # Crear un nuevo token
+        # El token toma la información del número de linea y columna del carácter
 
 
-def inicializar(textoFuente):
-    global c1
-    global c2
+        token = Token(self.c1)
 
-    scanner.inicializar(textoFuente)
-    c1 = scanner.get()
-    c2 = c1
+        if self.c1.caracter == FINDEARCHIVO:
+            token.tipo = FIN_DE_ARCHIVO
+            return Token
 
+        if self.c1.caracter in IDENTIFICADOR_CARACTERES_INICIALES:
+            token.tipo = IDENTIFICADOR
+            self.getChar()
 
-def getChar():
-    global c1, c2
-    c2 = copy.copy(c1)
-    c1 = scanner.get()
-    c2.caracter += c1.caracter
+            while self.c1.caracter in IDENTIFICADOR_CARACTERES:
+                token.caracter += self.c1.caracter
+                self.getChar()
 
+            return token
 
-def get():
-    """
-    Construye y retorna el siguiente token en el texto fuente
-    """
-    global c1, c2
+        if self.c1.caracter in NUMERO_CARACTERES_INICIALES:
+            token.tipo = NUMERO
+            self.getChar()
 
-    # --------------------------------------------------------------------------------
-    # Lee del texto fuente e ignora los espacios blancos y comentarios -- START
-    # --------------------------------------------------------------------------------
-    while c1.caracter in ESPACIOS_EN_BLANCO_CARACTERES or c2.caracter == '/*':
-        # procesar espacio en blanco
-        while c1.caracter in ESPACIOS_EN_BLANCO_CARACTERES:
-            token =  Token(c1)
-            token.tipo = ESPACIO_EN_BLANCO
-            getChar()
+            while self.c1.caracter in NUMERO_CARACTERES:
+                token.caracter += self.c1.caracter
+                self.getChar()
 
-            while c1.caracter in ESPACIOS_EN_BLANCO_CARACTERES:
-                token.caracter += c1
-                getChar()
+            return token
 
-            # retornar token solo si queremos procesar espacios en blanco
+        if self.c1.caracter in STRING_CARACTERES_INICIALES:
+            simboloString = self.c1.caracter
+            token.tipo = STRING
+            self.getChar()
 
-        # procesar comentarios
+            while not (self.c1.caracter == simboloString):
+                if self.c1.caracter == FINDEARCHIVO:
+                    raise LexerError
+                token.caracter += self.c1.caracter
+                self.getChar()
 
-        while c2.caracter == '/*':
-            # Encontramos el inicio de un comentario
-            token = Token(c2)
-            token.tipo = COMENTARIO
-            token.caracter = c2.caracter
-            getChar()
+            token.caracter += self.c1.caracter
+            return token
 
-            while not(c2.caracter == '*/'):
-                if c1.caracter == FIN_DE_ARCHIVO:
-                    pass
-                token.caracter += c1.caracter
-                getChar()
-            token.caracter += c1.caracter
-        # retornar token solo si se quieren procesar los comentarios
+        if self.c2.caracter in simbolosDosCaracteres:
+            token = Token(self.c2)
+            token.caracter = self.c2.caracter
 
-    # --------------------------------------------------------------------------------
-    # Lee del texto fuente e ignora los espacios blancos y comentarios -- FIN
-    # --------------------------------------------------------------------------------
+            # Para estos simbolos el tipo es igual a los caracteres del token
+            token.tipo = token.caracter
+            self.getChar()
+            return token
 
-    # Crear un nuevo token
-    # El token toma la información del número de linea y columna del carácter
+        if self.c1.caracter in simbolosUnCaracter:
+            # Para estos simbolos el tipo es igual a los caracteres del token
+            token.tipo = token.caracter
+            self.getChar()
+            return token
 
-    getChar()
-
-    token = Token(c1)
-
-    if c1.caracter == FINDEARCHIVO:
-        token.tipo = FIN_DE_ARCHIVO
-        return Token
-
-    elif c1.caracter in IDENTIFICADOR_CARACTERES_INICIALES:
-        token.tipo = IDENTIFICADOR
-        getChar()
-
-        while c1.caracter in IDENTIFICADOR_CARACTERES:
-            token.caracter += c1.caracter
-            getChar()
-
-        return token
-
-    elif c1.caracter in NUMERO_CARACTERES_INICIALES:
-        token.tipo = NUMERO
-        getChar()
-
-        while c1.caracter in NUMERO_CARACTERES:
-            token.caracter += c1.caracter
-            getChar()
-
-        return token
-
-    elif c1.caracter in STRING_CARACTERES_INICIALES:
-        simboloString = c1.caracter
-        token.tipo = STRING
-        getChar()
-
-        while not (c1.caracter == simboloString):
-            if c1.caracter == FINDEARCHIVO:
-                pass
-            token.caracter += c1.caracter
-            getChar()
-
-        token.caracter += c1.caracter
-        return token
-
-    elif c2.caracter in simbolosDosCaracteres:
-        token = Token(c2)
-        token.caracter = c2.caracter
-
-        # Para estos simbolos el tipo es igual a los caracteres del token
-        token.tipo = token.caracter
-        return token
-
-    elif c1.caracter in simbolosUnCaracter:
-        # Para estos simbolos el tipo es igual a los caracteres del token
-        token.tipo = token.caracter
-        return token
-
-    else:
-        token.tipo = FIN_DE_ARCHIVO
-        return token
+        else:
+            token.tipo = FIN_DE_ARCHIVO
+            return token
