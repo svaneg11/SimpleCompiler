@@ -43,13 +43,16 @@ class Lexer:
                 token.tipo = COMENTARIO
                 token.caracter = self.c2.caracter
                 self.getChar()
+                self.getChar()
 
                 while not(self.c2.caracter == '*/'):
-                    if self.c1.caracter == FIN_DE_ARCHIVO:
-                        pass
+                    if self.c1.caracter == '?':
+                        raise LexerError
                     token.caracter += self.c1. caracter
                     self.getChar()
-                token.caracter += self.c1.caracter
+                token.caracter += self.c2.caracter
+                self.getChar()
+                self.getChar()
             # retornar token solo si se quieren procesar los comentarios
 
         # --------------------------------------------------------------------------------
@@ -92,12 +95,13 @@ class Lexer:
             self.getChar()
 
             while not (self.c1.caracter == simboloString):
-                if self.c1.caracter == FINDEARCHIVO:
+                if self.c1.caracter == '?':
                     raise LexerError
                 token.caracter += self.c1.caracter
                 self.getChar()
 
             token.caracter += self.c1.caracter
+            self.getChar()
             return token
 
         if self.c2.caracter in simbolosDosCaracteres:
@@ -106,6 +110,7 @@ class Lexer:
 
             # Para estos simbolos el tipo es igual a los caracteres del token
             token.tipo = token.caracter
+            self.getChar()
             self.getChar()
             return token
 

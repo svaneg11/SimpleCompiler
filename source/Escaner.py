@@ -1,6 +1,7 @@
 from .Caracter import *
 import copy
 
+
 class Escaner:
 
     """
@@ -15,7 +16,6 @@ class Escaner:
         self.indiceLinea = 0
         self.indiceCol = -1
 
-
     def get(self):
         """
         retorna el siguiente carácter en el texto fuente
@@ -29,7 +29,7 @@ class Escaner:
         self.indiceCol += 1
 
         if self.indiceTexto > self.indiceFinal:
-            car = Caracter(FINDEARCHIVO, self.indiceLinea, self.indiceCol, self.indiceTexto, self.textoFuente)
+            car = Caracter('?', self.indiceLinea, self.indiceCol, self.indiceTexto, self.textoFuente)
             car2 = copy.copy(car)
         else:
             c = self.textoFuente[self.indiceTexto]

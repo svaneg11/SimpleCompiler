@@ -1,13 +1,12 @@
 from source.nxxLexer import Lexer
 from source.SimbolosNxx import *
-#from source.Token import LexerError
-#from source.Token import LexerStangeCharacterFound
-
+from source.Token import LexerError
+from source.Token import LexerStrangeCharacterFound
 
 global f
 f = open('nxx1.txt', "r")
 textoFuente = f.read()
-print("Here are the tokens returned by the lexer:")
+print("\nEstos son los tokens retornados por el lexer:")
 
 # create an instance of a lexer
 lexer = Lexer(textoFuente)
@@ -23,7 +22,8 @@ while True:
         print(token.show(True))
         if token.tipo == FIN_DE_ARCHIVO:
             break
-    except Exception:
-        print("Error")
-        break
+    except LexerError:
+        print('Error: fin de archivo encontrado inesperadamente')
+    except LexerStrangeCharacterFound:
+        print('Error: carácter irreconocible encontrado')
 f.close()

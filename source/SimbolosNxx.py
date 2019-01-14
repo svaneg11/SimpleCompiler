@@ -75,7 +75,7 @@ ESPACIOS_EN_BLANCO_CARACTERES = " \t\n"
 # ---------------------------------------------------
 STRING = "String"
 IDENTIFICADOR = "Identificador"
-NUMERO = "Number"
+NUMERO = "Número"
 ESPACIO_EN_BLANCO = "Espacio en blanco"
 COMENTARIO = "Comentario"
 FIN_DE_ARCHIVO = "eof"
