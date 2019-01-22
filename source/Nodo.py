@@ -29,6 +29,6 @@ class Nodo:
         else:
             s += self.token.caracter + "\n"
 
-        for child in self.children:x
+        for child in self.children:
             s += child.toString()
         return s
