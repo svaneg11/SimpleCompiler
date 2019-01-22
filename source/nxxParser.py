@@ -23,7 +23,7 @@ def getToken():
         if token:
             # print the current token, before we get the next one
             # print (" "*40) + token.show()
-            print("  "*indent) + "   (" + token.show(align=False) + ")")
+            print("  "*indent + "   (" + token.show(align=False) + ")")
     token = lexer.get()
 
 #------------------------------------

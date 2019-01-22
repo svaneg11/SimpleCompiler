@@ -7,7 +7,7 @@ class Nodo:
     def __init__(self, token=None):
         self.token = token
         self.nivel = 0
-        self.children = [] #lista de nodos hijo
+        self.children = [] # lista de nodos hijo
 
     def agregar(self, token):
         """
@@ -24,7 +24,7 @@ class Nodo:
 
     def toString(self):
         s = "     " * self.nivel
-        if self.token == None
+        if self.token == None:
             s += "RAÍZ\n"
         else:
             s += self.token.caracter + "\n"
